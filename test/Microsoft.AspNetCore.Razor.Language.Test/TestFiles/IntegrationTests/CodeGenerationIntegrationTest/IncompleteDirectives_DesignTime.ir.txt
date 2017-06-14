@@ -39,21 +39,12 @@ Document -
                     RazorIRToken - (264:14,9 [2] IncompleteDirectives.cshtml) - Html - \n
                 HtmlContent - (276:15,10 [4] IncompleteDirectives.cshtml)
                     RazorIRToken - (276:15,10 [4] IncompleteDirectives.cshtml) - Html - \n\n
-                CSharpCode - 
-                    RazorIRToken -  - CSharp - DefineSection("", async (__razor_section_writer) => {
-                CSharpCode - 
-                    RazorIRToken -  - CSharp - });
+                Section -  - 
                 HtmlContent - (315:20,8 [2] IncompleteDirectives.cshtml)
                     RazorIRToken - (315:20,8 [2] IncompleteDirectives.cshtml) - Html - \n
-                CSharpCode - 
-                    RazorIRToken -  - CSharp - DefineSection("", async (__razor_section_writer) => {
-                CSharpCode - 
-                    RazorIRToken -  - CSharp - });
+                Section -  - 
                 HtmlContent - (326:21,9 [4] IncompleteDirectives.cshtml)
                     RazorIRToken - (326:21,9 [4] IncompleteDirectives.cshtml) - Html - \n\n
-                CSharpCode - 
-                    RazorIRToken -  - CSharp - DefineSection("", async (__razor_section_writer) => {
-                CSharpCode - 
-                    RazorIRToken -  - CSharp - });
+                Section -  - 
                 HtmlContent - (339:23,9 [3] IncompleteDirectives.cshtml)
                     RazorIRToken - (339:23,9 [3] IncompleteDirectives.cshtml) - Html - {\n
