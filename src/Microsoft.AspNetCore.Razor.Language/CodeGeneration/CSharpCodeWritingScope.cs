@@ -40,7 +40,8 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
         {
             TryAutoSpace(" ");
 
-            _writer.WriteLine("{").IncreaseIndent(_tabSize);
+            _writer.WriteLine("{");
+            _writer.CurrentIndent += _tabSize;
             _startIndent = _writer.CurrentIndent;
         }
 
@@ -51,7 +52,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             // Ensure the scope hasn't been modified
             if (_writer.CurrentIndent == _startIndent)
             {
-                _writer.DecreaseIndent(_tabSize);
+                _writer.CurrentIndent -= _tabSize;
             }
 
             _writer.WriteLine("}");

@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
 {
-    public class CSharpCodeWriter : IDisposable
+    public sealed class CSharpCodeWriter
     {
         private const string InstanceMethodFormat = "{0}.{1}";
 
@@ -37,39 +37,16 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
 
         public StringBuilder Builder { get; } = new StringBuilder();
 
-        public int CurrentIndent { get; private set; }
+        public int CurrentIndent { get; set; }
 
         public bool IsAfterNewLine { get; private set; }
 
         public string NewLine { get; set; } = Environment.NewLine;
 
-        public CSharpCodeWriter ResetIndent()
-        {
-            return SetIndent(0);
-        }
+        public SourceLocation Location => new SourceLocation(_absoluteIndex, _currentLineIndex, _currentLineCharacterIndex);
 
-        public CSharpCodeWriter IncreaseIndent(int size)
-        {
-            CurrentIndent += size;
-
-            return this;
-        }
-
-        public CSharpCodeWriter DecreaseIndent(int size)
-        {
-            CurrentIndent -= size;
-
-            return this;
-        }
-
-        public CSharpCodeWriter SetIndent(int size)
-        {
-            CurrentIndent = size;
-
-            return this;
-        }
-
-        public CSharpCodeWriter Indent(int size)
+        // Internal for testing.
+        internal CSharpCodeWriter Indent(int size)
         {
             if (IsAfterNewLine)
             {
@@ -200,11 +177,6 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             return _cache;
         }
 
-        public SourceLocation GetCurrentSourceLocation()
-        {
-            return new SourceLocation(_absoluteIndex, _currentLineIndex, _currentLineCharacterIndex);
-        }
-
         public CSharpCodeWriter WritePadding(int offset, SourceSpan? span, CSharpRenderingContext context)
         {
             if (span == null)
@@ -316,16 +288,6 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             return this;
         }
 
-        public CSharpCodeWriter WriteLineHiddenDirective()
-        {
-            return WriteLine("#line hidden");
-        }
-
-        public CSharpCodeWriter WritePragma(string value)
-        {
-            return Write("#pragma ").WriteLine(value);
-        }
-
         public CSharpCodeWriter WriteUsing(string name)
         {
             return WriteUsing(name, endLine: true);
@@ -342,28 +304,6 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             }
 
             return this;
-        }
-
-        public CSharpCodeWriter WriteLineDefaultDirective()
-        {
-            return WriteLine("#line default");
-        }
-
-        public CSharpCodeWriter WriteReturn(string value)
-        {
-            return WriteReturn(value, endLine: true);
-        }
-
-        public CSharpCodeWriter WriteReturn(string value, bool endLine)
-        {
-            Write("return ").Write(value);
-
-            if (endLine)
-            {
-                Write(";");
-            }
-
-            return WriteLine();
         }
 
         /// <summary>
@@ -422,9 +362,10 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
         }
 
         // Writes a method invocation for the given instance name.
-        public CSharpCodeWriter WriteInstanceMethodInvocation(string instanceName,
-                                                              string methodName,
-                                                              params string[] parameters)
+        public CSharpCodeWriter WriteInstanceMethodInvocation(
+            string instanceName,
+            string methodName,
+            params string[] parameters)
         {
             if (instanceName == null)
             {
@@ -440,10 +381,11 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
         }
 
         // Writes a method invocation for the given instance name.
-        public CSharpCodeWriter WriteInstanceMethodInvocation(string instanceName,
-                                                              string methodName,
-                                                              bool endLine,
-                                                              params string[] parameters)
+        public CSharpCodeWriter WriteInstanceMethodInvocation(
+            string instanceName,
+            string methodName,
+            bool endLine,
+            params string[] parameters)
         {
             if (instanceName == null)
             {
@@ -461,8 +403,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
                 parameters);
         }
 
-        public CSharpCodeWriter WriteStartInstanceMethodInvocation(string instanceName,
-                                                                   string methodName)
+        public CSharpCodeWriter WriteStartInstanceMethodInvocation(string instanceName, string methodName)
         {
             if (instanceName == null)
             {
@@ -825,11 +766,6 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             Write("\"");
         }
 
-        public void Dispose()
-        {
-            Builder.Clear();
-        }
-
         private class LinePragmaWriter : IDisposable
         {
             private readonly CSharpCodeWriter _writer;
@@ -844,7 +780,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
 
                 _writer = writer;
                 _startIndent = _writer.CurrentIndent;
-                _writer.ResetIndent();
+                _writer.CurrentIndent = 0;
                 _writer.WriteLineNumberDirective(documentLocation, documentLocation.FilePath);
             }
 
@@ -865,9 +801,10 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
                 }
 
                 _writer
-                    .WriteLineDefaultDirective()
-                    .WriteLineHiddenDirective()
-                    .SetIndent(_startIndent);
+                    .WriteLine("#line default")
+                    .WriteLine("#line hidden");
+
+                _writer.CurrentIndent = _startIndent;
             }
         }
 

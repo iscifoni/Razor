@@ -35,7 +35,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             writer.Write("1234");
 
             // Assert
-            var location = writer.GetCurrentSourceLocation();
+            var location = writer.Location;
             var expected = new SourceLocation(absoluteIndex: 4, lineIndex: 0, characterIndex: 4);
 
             Assert.Equal(expected, location);
@@ -52,7 +52,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             writer.Indent(size: 3);
 
             // Assert
-            var location = writer.GetCurrentSourceLocation();
+            var location = writer.Location;
             var expected = new SourceLocation(absoluteIndex: 3 + WriterNewLineLength, lineIndex: 1, characterIndex: 3);
 
             Assert.Equal(expected, location);
@@ -68,7 +68,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             writer.WriteLine("1234");
 
             // Assert
-            var location = writer.GetCurrentSourceLocation();
+            var location = writer.Location;
 
             var expected = new SourceLocation(absoluteIndex: 4 + WriterNewLineLength, lineIndex: 1, characterIndex: 0);
 
@@ -86,7 +86,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             writer.WriteLine("1234" + newLine + "12");
 
             // Assert
-            var location = writer.GetCurrentSourceLocation();
+            var location = writer.Location;
 
             var expected = new SourceLocation(
                 absoluteIndex: 6 + newLine.Length + WriterNewLineLength,
@@ -107,7 +107,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             writer.Write("1234" + newLine + "123" + newLine + "12");
 
             // Assert
-            var location = writer.GetCurrentSourceLocation();
+            var location = writer.Location;
 
             var expected = new SourceLocation(
                 absoluteIndex: 9 + newLine.Length + newLine.Length,
@@ -127,7 +127,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             writer.Write("1234\n\n123");
 
             // Assert
-            var location = writer.GetCurrentSourceLocation();
+            var location = writer.Location;
 
             var expected = new SourceLocation(
                 absoluteIndex: 9,
@@ -147,7 +147,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             writer.Write("1234\r123\r\n12\n1");
 
             // Assert
-            var location = writer.GetCurrentSourceLocation();
+            var location = writer.Location;
 
             var expected = new SourceLocation(
                 absoluteIndex: 14,
@@ -165,10 +165,10 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
 
             // Act
             writer.Write("1234\r");
-            var location1 = writer.GetCurrentSourceLocation();
+            var location1 = writer.Location;
 
             writer.Write("\n");
-            var location2 = writer.GetCurrentSourceLocation();
+            var location2 = writer.Location;
 
             // Assert
             var expected1 = new SourceLocation(absoluteIndex: 5, lineIndex: 1, characterIndex: 0);
@@ -186,10 +186,10 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
 
             // Act
             writer.Write("1234\r");
-            var location1 = writer.GetCurrentSourceLocation();
+            var location1 = writer.Location;
 
             writer.Write("\r");
-            var location2 = writer.GetCurrentSourceLocation();
+            var location2 = writer.Location;
 
             // Assert
             var expected1 = new SourceLocation(absoluteIndex: 5, lineIndex: 1, characterIndex: 0);
@@ -207,10 +207,10 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
 
             // Act
             writer.Write("1234\n");
-            var location1 = writer.GetCurrentSourceLocation();
+            var location1 = writer.Location;
 
             writer.Write("\n");
-            var location2 = writer.GetCurrentSourceLocation();
+            var location2 = writer.Location;
 
             // Assert
             var expected1 = new SourceLocation(absoluteIndex: 5, lineIndex: 1, characterIndex: 0);
@@ -228,10 +228,10 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
 
             // Act
             writer.Write("1234\n");
-            var location1 = writer.GetCurrentSourceLocation();
+            var location1 = writer.Location;
 
             writer.Write("\r");
-            var location2 = writer.GetCurrentSourceLocation();
+            var location2 = writer.Location;
 
             // Assert
             var expected1 = new SourceLocation(absoluteIndex: 5, lineIndex: 1, characterIndex: 0);
@@ -249,10 +249,10 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
 
             // Act
             writer.Write("\r");
-            var location1 = writer.GetCurrentSourceLocation();
+            var location1 = writer.Location;
 
             writer.Write("\n");
-            var location2 = writer.GetCurrentSourceLocation();
+            var location2 = writer.Location;
 
             // Assert
             var expected1 = new SourceLocation(absoluteIndex: 1, lineIndex: 1, characterIndex: 0);

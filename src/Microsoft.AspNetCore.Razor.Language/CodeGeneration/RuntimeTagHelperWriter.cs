@@ -70,15 +70,15 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
 
         public override void WriteDeclareTagHelperFields(CSharpRenderingContext context, DeclareTagHelperFieldsIRNode node)
         {
-            context.Writer.WriteLineHiddenDirective();
+            context.Writer.WriteLine("#line hidden");
 
             // Need to disable the warning "X is assigned to but never used." for the value buffer since
             // whether it's used depends on how a TagHelper is used.
             context.Writer
-                .WritePragma("warning disable 0414")
+                .WriteLine("#pragma warning disable 0414")
                 .Write("private ")
                 .WriteVariableDeclaration("string", StringValueBufferVariableName, value: null)
-                .WritePragma("warning restore 0414");
+                .WriteLine("#pragma warning restore 0414");
 
             context.Writer
             .Write("private ")
@@ -131,7 +131,10 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
                             .WriteEndMethodInvocation();
                     }
 
-                    context.Writer.WriteReturn(backedScopeManageVariableName);
+                    context.Writer
+                        .Write("return ")
+                        .Write(backedScopeManageVariableName)
+                        .WriteLine(";");
                 }
             }
 

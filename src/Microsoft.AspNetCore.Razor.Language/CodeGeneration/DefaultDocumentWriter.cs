@@ -86,7 +86,7 @@ namespace Microsoft.AspNetCore.Razor.Language.CodeGeneration
             {
                 using (Context.Writer.BuildNamespace(node.Content))
                 {
-                    Context.Writer.WriteLineHiddenDirective();
+                    Context.Writer.WriteLine("#line hidden");
                     RenderChildren(node);
                 }
             }
